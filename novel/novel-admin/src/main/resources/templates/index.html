@@ -1,0 +1,3209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scaleable=0">
+    <title>小说后台管理</title>
+    <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        .pSet {
+            overflow: hidden;
+            white-space: normal;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+<div class="ui stackable grid container-fluid">
+    <!--侧边栏-->
+    <div class="three wide column mobileHidden">
+        <div class="ui two column grid" style="height: 170px;background-color: rgb(38, 58, 73);padding: 12.5%">
+            <div class="row">
+                <div class="column">
+                    <img src="../static/images/adminAvatar.jpg" alt="#" th:src="@{/images/adminAvatar.jpg}"
+                         style="width: 70px;height: 70px;border-radius: 50%">
+                    <div class="margin-top-small"
+                         style="color: white;font-weight: 700;font-size: 16px;margin-left: -5px;">超级管理员
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui four column grid" style="height:580px;background-color: rgb(47, 65, 80)">
+            <div class="ui large horizontal list" style="color:rgb(132, 144, 161)">
+                <div class="item">
+                </div>
+                <div class="item">
+                    <div class="content" style=";width: 240px;margin-top: 25px;cursor: pointer;color: white"
+                         id="lItem1">
+                        <i class="align video icon"></i><span>系统监控</span><i class="angle left icon"
+                                                                            style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer" id="lItem2">
+                        <i class="desktop icon"></i><span>用户管理</span><i class="angle left icon" style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer" id="lItem3">
+                        <i class="wrench icon"></i><span>管理员管理</span><i class="angle left icon" style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer;" id="lItem5">
+                        <i class="user outline icon"></i><span>作家管理</span><i class="angle left icon"
+                                                                             style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer" id="lItem6">
+                        <i class="book icon"></i><span>小说管理</span> <i class="angle left icon" style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer" id="lItem7">
+                        <i class="bookmark icon"></i><span>小说类型管理</span> <i class="angle left icon"
+                                                                            style="float:right"></i>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content" style="width: 240px;margin-top: 25px;cursor: pointer" id="lItem8">
+                        <i class="tags icon"></i><span>小说标签管理</span> <i class="angle left icon" style="float:right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧边栏-->
+    <div class="thirteen wide column" style="padding-left: 1px!important;">
+        <!--顶栏-->
+        <div class="ui stackable container-fluid">
+            <nav class="ui inverted attached segment"></nav>
+            <div class="ui attached segment" style="background-color: rgb(243, 243, 244)">
+                <button class="mini ui grey button pcHidden" style="color: rgb(235, 235, 235)"><i
+                        class="icon angle double down"></i>展开
+                </button>
+                <button class="mini ui grey button mobileHidden">
+                    <i class="icon paper plane outline"></i>
+                </button>
+                <form action="" th:action="@{/logout}" style="float: right;color: rgb(235, 235, 235)">
+                    <button class="mini ui grey button" type="submit"><i
+                            class="icon sign out"></i> 退出
+                    </button>
+                </form>
+                <div class="ui dropdown" style="float: right;color: rgb(235, 235, 235)">
+                    <div class="mini ui grey button" id="personShowMenuOpenButton"><i
+                            class="icon address card outline"></i> 个人
+                    </div>
+                    <div class="center aligned menu" id="personShowMenu">
+                        <div class="ui center aligned header">已登录用户信息</div>
+                        <div class="divider"></div>
+                        <div class="item">
+                            管理名：&emsp;<span th:text="${nowAdminName}">3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui attached segment">
+                <div class="ui pointing secondary menu">
+                    <a class="item active" data-tab="首页" id="boxTitle1">首页</a>
+                    <a class="item" data-tab="用户管理" id="boxTitle2">用户管理</a>
+                    <a class="item" data-tab="管理员管理" id="boxTitle3">管理员管理</a>
+                    <a class="item" data-tab="作家管理" id="boxTitle5">作家管理</a>
+                    <a class="item" data-tab="小说管理" id="boxTitle6">小说管理</a>
+                    <a class="item" data-tab="小说类型管理" id="boxTitle7">小说类型管理</a>
+                    <a class="item" data-tab="小说标签管理" id="boxTitle8">小说标签管理</a>
+                </div>
+            </div>
+            <!--box用于设置某个盒子的滚动-->
+            <!--系统监控-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: white;" id="box1">
+                <div class="eleven wide column">
+                    <div class="ui attached segment">
+                        <i class="icon green pencil alternate"></i><span>数据统计</span>
+                    </div>
+                    <div class="ui attached segment">
+                        <table class="ui table" style="border: none!important;" cellpadding="5">
+                            <tr>
+                                <th>
+                                    <div style="background-color: rgb(243, 243, 244);padding: 10px;border-radius: 5px">
+                                        <div>会员统计
+                                            <div class="ui orange horizontal label" style="float:right">实时</div>
+                                        </div>
+                                        <div style="font-size: 30px" th:text="${countVips}">3</div>
+                                        <div>此分类的记录数</div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div style="background-color: rgb(243, 243, 244);padding: 10px;border-radius: 5px">
+                                        <div>作家统计
+                                            <div class="ui blue horizontal label" style="float:right">实时</div>
+                                        </div>
+                                        <div style="font-size: 30px" th:text="${countAuthors}">10</div>
+                                        <div>此分类的记录数</div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <div style="background-color: rgb(243, 243, 244);padding: 10px;border-radius: 5px">
+                                        <div>作品统计
+                                            <div class="ui purple horizontal label" style="float:right">实时</div>
+                                        </div>
+                                        <div style="font-size: 30px" th:text="${countBooks}">40</div>
+                                        <div>此分类的记录数</div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div style="background-color: rgb(243, 243, 244);padding: 10px;border-radius: 5px">
+                                        <div>交易统计(未启用)
+                                            <div class="ui brown horizontal label" style="float:right">实时</div>
+                                        </div>
+                                        <div style="font-size: 30px">0</div>
+                                        <div>此分类的记录数</div>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div style="height: 20px;">
+                    </div>
+
+                    <div class="mobileHidden">
+                        <div class="ui attached segment">
+                            <i class="icon green table"></i><span>报表统计</span>
+                        </div>
+                        <div class="ui attached segment">
+                            <!--图表-->
+                            <div class="page-wrapper">
+                                <div class="content-wrapper">
+                                    <div class="background-wrapper">
+                                        <canvas id="myCanvas" width="805" height="360"
+                                                style="border:1px solid #d3d3d3;">
+                                            Your browser does not support the HTML5 canvas tag.
+                                        </canvas>
+                                    </div>
+                                    <div class="content-main animate">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="five wide column">
+                    <div class="ui attached segment">
+                        <i class="icon green clipboard"></i><span>项目信息</span>
+                    </div>
+                    <div class="ui attached segment">
+                        <table class="ui celled table">
+                            <tbody>
+                            <tr>
+                                <td data-label="Name">项目名称</td>
+                                <td data-label="Age">小说屋</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">开发语言</td>
+                                <td data-label="Age">Java</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">主要特色</td>
+                                <td data-label="Age">小说</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">下载地址</td>
+                                <td data-label="Age">Github</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">Github</td>
+                                <td data-label="Age">...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--用于分隔-->
+                    <div style="height: 30px;">
+                    </div>
+
+                    <div class="ui attached segment">
+                        <i class="icon green clipboard"></i><span>项目信息</span>
+                    </div>
+                    <div class="ui attached segment">
+                        <table class="ui celled table">
+                            <tbody>
+                            <tr>
+                                <td data-label="Name">项目名称</td>
+                                <td data-label="Age">小说屋</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">开发语言</td>
+                                <td data-label="Age">Java</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">主要特色</td>
+                                <td data-label="Age">小说</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">下载地址</td>
+                                <td data-label="Age">Github</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Name">Github</td>
+                                <td data-label="Age">...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--占位-->
+                <div>&nbsp;</div>
+            </div>
+            <!--用户管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box2">
+                <div th:fragment="usersTemplate" class="ui left aligned container margin-top-massive"
+                     id="usersTemplate">
+                    <h1 style="text-align: center!important;margin-top: 15px">用户管理模块</h1>
+                    <div style="margin-top:15px!important;">
+                        <!--添加信息填入栏-->
+                        <div class="ui dropdown">
+                            <div class="ui teal small icon button" id="userInsertOpenButton">
+                                添加
+                                <i class="ui dropdown icon"></i>
+                            </div>
+                            <div class="center aligned menu" id="userInsertMenu">
+                                <div class="ui center aligned header">添加信息</div>
+                                <div class="divider"></div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        用户名
+                                    </div>
+                                    <input type="text" placeholder="用户名不得超过36个字符...">
+                                </div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        用户密码
+                                    </div>
+                                    <input type="text" placeholder="输入新的用户密码...">
+                                </div>
+                                <div class="ui right labeled input">
+                                    <div class="ui basic label">
+                                        手机号
+                                    </div>
+                                    <input type="text" placeholder="输入手机号..">
+                                </div>
+                                <div class="ui right labeled input">
+                                    <div class="ui basic label">
+                                        社交账号
+                                    </div>
+                                    <input type="text" placeholder="输入任意社交账号...">
+                                    <div class="ui basic label">
+                                        选填
+                                    </div>
+                                </div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        邮箱
+                                    </div>
+                                    <input type="text" placeholder="输入邮箱...">
+                                </div>
+                                <div class="ui right labeled input">
+                                    <div class="ui basic label">
+                                        用户类型
+                                    </div>
+                                    <input type="text" placeholder="0为普通用户，1为VIP，2为作家">
+                                </div>
+                                <div class="item">
+                                    <div class="ui teal fluid button" id="userInsertButton">提交</div>
+                                </div>
+                                <div class="ui center aligned fluid container"
+                                     th:each="userinserterror : ${userInsertErrors}"
+                                     style="color: rgb(255, 27, 45);font-weight: 700">
+                                    <div class="divider"></div>
+                                    <span th:text="${userinserterror}">123</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui small red button" id="usersDeleteButton"><i class="x icon"></i>删除选中元素</button>
+                        &emsp;
+                        <span th:if="${insertUserSuccess}"
+                              style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">插入成功</span>
+                        <span th:if="${insertUserFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">插入失败</span>
+                        <span th:if="${editUserSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">修改成功</span>
+                        <span th:if="${editUserFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">修改失败</span>
+                        <!--搜索框（加入loading的class可以显示搜索时的加载特效）-->
+                        <div class="ui search" style="float: right">
+                            <div class="ui icon input" style="width: 630px;">
+                                <input class="prompt" type="text" placeholder="查询用户名"
+                                       id="usersSearch" name="usersSearch">
+                            </div>
+                            <div class="results"></div>
+                            <button class="ui purple button" id="usersSearchButton"><i class="search icon"></i>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div th:fragment="usersTable" id="usersTable">
+                        <table class="ui compact celled definition center aligned table"
+                               style="margin-top: 20px!important;">
+                            <thead class="full-width">
+                            <tr>
+                                <th></th>
+                                <th>用户名</th>
+                                <th>手机号码</th>
+                                <th>社交账号</th>
+                                <th>邮箱</th>
+                                <th>用户类型</th>
+                                <th>账号状态</th>
+                                <th>作家注册时间</th>
+                                <th>被关注数</th>
+                                <th>简单操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${allUsers.list}">
+                                <td class="collapsing">
+                                    <div class="ui fitted slider checkbox">
+                                        <input type="checkbox" name="userSelected"> <label></label>
+                                    </div>
+                                </td>
+                                <td th:text="${user.userName}">河马</td>
+                                <td th:text="${user.telPhone}">123456789</td>
+                                <td th:text="${user.chatAccount}">123456789</td>
+                                <td th:text="${user.email}">jhlilk22@yahoo.com</td>
+                                <td th:text="${user.userType == 0 ? '普通用户' : (user.userType == 1 ? 'VIP' : '作家')}">
+                                    普通用户
+                                </td>
+                                <td th:text="${user.status == 0 ? '正常' : '封禁'}">正常</td>
+                                <td th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2013年9月14日</td>
+                                <td th:text="${user.followedCount}">2013年9月14日</td>
+                                <td>
+                                    <input type="hidden" th:value="${user.id}">
+                                    <div class="ui right pointing dropdown">
+                                        <button class="ui small teal icon button userEditOpenButton">
+                                            编辑
+                                            <i class="edit icon"></i>
+                                        </button>
+                                        <div class="center aligned menu userEditMenu">
+                                            <div class="ui center aligned header">修改信息</div>
+                                            <div class="divider"></div>
+                                            <div class="ui left labeled disabled input">
+                                                <div class="ui basic label">
+                                                    ID
+                                                </div>
+                                                <input type="text" placeholder="id..." th:value="${user.id}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    用户名
+                                                </div>
+                                                <input type="text" placeholder="用户名不得超过36个字符..."
+                                                       th:value="${user.userName}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    用户密码
+                                                </div>
+                                                <input type="text" placeholder="输入新的用户密码...">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    手机号码
+                                                </div>
+                                                <input type="text" placeholder="输入手机号码..." th:value="${user.telPhone}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    社交账号
+                                                </div>
+                                                <input type="text" placeholder="输入任意社交账号..."
+                                                       th:value="${user.chatAccount == null ? '无' : user.chatAccount}">
+                                                <div class="ui basic label">
+                                                    选填
+                                                </div>
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    邮箱
+                                                </div>
+                                                <input type="text" placeholder="输入邮箱..." th:value="${user.email}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    用户类型
+                                                </div>
+                                                <input type="text" placeholder="0为普通用户，1为VIP，2为作家"
+                                                       th:value="${user.userType == 0 ? '普通用户' : (user.userType == 1 ? 'VIP' : '作家')}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    用户状态
+                                                </div>
+                                                <input type="text" placeholder="输入用户状态..."
+                                                       th:value="${user.status == 0 ? '正常' : '封禁'}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    被关注数
+                                                </div>
+                                                <input type="text" placeholder="输入被关注数..."
+                                                       th:value="${user.followedCount}">
+                                            </div>
+
+                                            <div class="item">
+                                                <div class="ui teal fluid button">提交</div>
+                                            </div>
+                                            <div class="ui center aligned fluid container"
+                                                 th:each="userediterror : ${userEditErrors}"
+                                                 style="color: rgb(255, 27, 45);font-weight: 700">
+                                                <span th:text="${userediterror}">123</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui small red button userDeleteButton"><i
+                                            class="trash alternate icon"></i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="full-width left aligned">
+                            <tr>
+                                <th></th>
+                                <th colspan="9">
+                                    <div class="ui medium disabled button margin-top-small" id="userRemoveAll">
+                                        Remove All
+                                    </div>
+                                    <div class="ui medium button margin-top-small" id="userApproveAll">
+                                        Approve All
+                                    </div>
+                                    <div class="ui right floated pagination menu" style="float: right"
+                                         th:if="${allUsers.pages} > 1" id="pageColumn">
+                                        <!--上一页-->
+                                        <a id="preUsersPage" class="icon item" th:unless="${allUsers.isFirstPage}">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                        <a class="active item" th:if="${allUsers.pageNum} <= ${allUsers.pages}"
+                                           th:text="${allUsers.pageNum}"></a>
+                                        <!--下一页-->
+                                        <a id="nextUsersPage" class="icon item" th:unless="${allUsers.isLastPage}">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <!--存放作者管理所需的后台数据-->
+                            <input type="hidden" id="UserPageNum" th:value="${allUsers.pageNum}">
+                            <input type="hidden" id="UserPageSize" th:value="${allUsers.pageSize}">
+                            <input type="hidden" id="UserPages" th:value="${allUsers.pages}">
+                        </table>
+                        <div>
+                            <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                显示第&nbsp;<span th:text="${allUsers.startRow}">1</span>&nbsp;到第&nbsp;<span
+                                    th:text="${allUsers.endRow}">3</span>&nbsp;条记录，单页条目数为&nbsp;<span
+                                    th:text="${allUsers.pageSize}">3</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                    th:text="${allUsers.total}"></span>&nbsp;条
+                            </div>
+                            <div class="ui mini action input" style="float: right">
+                                <input type="text" placeholder="跳转到...页" id="userSkip">
+                                <button class="ui icon button" id="userSkipButton">
+                                    <i class="arrow alternate circle right icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--管理员管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box3">
+                <div th:fragment="administratorsTemplate" class="ui left aligned container margin-top-massive"
+                     id="administratorsTemplate">
+                    <h1 style="text-align: center!important;margin-top: 15px">管理员管理模块</h1>
+                    <div style="margin-top: 15px!important;">
+                        <!--添加信息填入栏-->
+                        <div class="ui dropdown">
+                            <div class="ui teal small icon button" id="administratorInsertOpenButton">
+                                添加
+                                <i class="ui dropdown icon"></i>
+                            </div>
+                            <div class="center aligned menu" id="administratorInsertMenu">
+                                <div class="ui center aligned header">添加信息</div>
+                                <div class="divider"></div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        管理名
+                                    </div>
+                                    <input type="text" placeholder="管理名不得超过36个字符...">
+                                </div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        管理密码
+                                    </div>
+                                    <input type="text" placeholder="输入新的管理密码...">
+                                </div>
+                                <div class="item">
+                                    <div class="ui teal fluid button" id="administratorInsertButton">提交</div>
+                                </div>
+                                <div class="ui center aligned fluid container"
+                                     th:each="administratorinserterror : ${administratorInsertErrors}"
+                                     style="color: rgb(255, 27, 45);font-weight: 700">
+                                    <div class="divider"></div>
+                                    <span th:text="${administratorinserterror}">123</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui small red button" id="administratorsDeleteButton"><i class="x icon"></i>删除选中元素
+                        </button>
+                        &emsp;
+                        <span th:if="${insertAdministratorSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">插入成功</span>
+                        <span th:if="${insertAdministratorFault}"
+                              style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">插入失败</span>
+                        <span th:if="${editAdministratorSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">修改成功</span>
+                        <span th:if="${editAdministratorFault}"
+                              style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">修改失败</span>
+                        <!--搜索框（加入loading的class可以显示搜索时的加载特效）-->
+                        <div class="ui search" style="float: right">
+                            <div class="ui icon input" style="width: 630px;">
+                                <input class="prompt" type="text" placeholder="请输入管理名或某些管理名的前缀进行搜索！"
+                                       id="administratorsSearch" name="administratorsSearch">
+                            </div>
+                            <div class="results"></div>
+                            <button class="ui purple button" id="administratorsSearchButton"><i class="search icon"></i>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div th:fragment="administratorsTable" id="administratorsTable">
+                        <table class="ui compact celled definition center aligned table"
+                               style="margin-top: 20px!important;">
+                            <thead class="full-width">
+                            <tr>
+                                <th></th>
+                                <th>管理名</th>
+                                <th>管理注册时间</th>
+                                <th>简单操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="administrator : ${allAdministrators.list}">
+                                <td class="collapsing">
+                                    <div class="ui fitted slider checkbox">
+                                        <input type="checkbox" name="administratorSelected"> <label></label>
+                                    </div>
+                                </td>
+                                <td th:text="${administrator.adminName}">河马</td>
+                                <td th:text="${#dates.format(administrator.createTime, 'yyyy-MM-dd HH:mm:ss')}">
+                                    2013年9月14日
+                                </td>
+                                <td>
+                                    <input type="hidden" th:value="${administrator.id}">
+                                    <div class="ui right pointing dropdown">
+                                        <button class="ui small teal icon button administratorEditOpenButton">
+                                            编辑
+                                            <i class="edit icon"></i>
+                                        </button>
+                                        <div class="center aligned menu administratorEditMenu">
+                                            <div class="ui center aligned header">修改信息</div>
+                                            <div class="divider"></div>
+                                            <div class="ui left labeled disabled input">
+                                                <div class="ui basic label">
+                                                    ID
+                                                </div>
+                                                <input type="text" placeholder="id..." th:value="${administrator.id}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    管理名
+                                                </div>
+                                                <input type="text" placeholder="管理名不得超过36个字符..."
+                                                       th:value="${administrator.adminName}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    管理密码
+                                                </div>
+                                                <input type="text" placeholder="输入新的管理密码...">
+                                            </div>
+                                            <div class="item">
+                                                <div class="ui teal fluid button">提交</div>
+                                            </div>
+                                            <div class="ui center aligned fluid container"
+                                                 th:each="administratorediterror : ${administratorEditErrors}"
+                                                 style="color: rgb(255, 27, 45);font-weight: 700">
+                                                <span th:text="${administratorediterror}">123</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui small red button administratorDeleteButton"><i
+                                            class="trash alternate icon"></i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="full-width left aligned">
+                            <tr>
+                                <th></th>
+                                <th colspan="7">
+                                    <div class="ui medium disabled button margin-top-small" id="administratorRemoveAll">
+                                        Remove All
+                                    </div>
+                                    <div class="ui medium button margin-top-small" id="administratorApproveAll">
+                                        Approve All
+                                    </div>
+                                    <div class="ui right floated pagination menu" style="float: right"
+                                         th:if="${allAdministrators.pages} > 1" id="pageColumn">
+                                        <!--上一页-->
+                                        <a id="preAdministratorsPage" class="icon item"
+                                           th:unless="${allAdministrators.isFirstPage}">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                        <a class="active item"
+                                           th:if="${allAdministrators.pageNum} <= ${allAdministrators.pages}"
+                                           th:text="${allAdministrators.pageNum}"></a>
+                                        <!--下一页-->
+                                        <a id="nextAdministratorsPage" class="icon item"
+                                           th:unless="${allAdministrators.isLastPage}">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <!--存放作者管理所需的后台数据-->
+                            <input type="hidden" id="AdministratorPageNum" th:value="${allAdministrators.pageNum}">
+                            <input type="hidden" id="AdministratorPageSize" th:value="${allAdministrators.pageSize}">
+                            <input type="hidden" id="AdministratorPages" th:value="${allAdministrators.pages}">
+                        </table>
+                        <div>
+                            <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                显示第&nbsp;<span th:text="${allAdministrators.startRow}">1</span>&nbsp;到第&nbsp;<span
+                                    th:text="${allAdministrators.endRow}">3</span>&nbsp;条记录，单页条目数为&nbsp;<span
+                                    th:text="${allAdministrators.pageSize}">3</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                    th:text="${allAdministrators.total}"></span>&nbsp;条
+                            </div>
+                            <div class="ui mini action input" style="float: right">
+                                <input type="text" placeholder="跳转到...页" id="administratorSkip">
+                                <button class="ui icon button" id="administratorSkipButton">
+                                    <i class="arrow alternate circle right icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--作家管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box5">
+                <div th:fragment="authorsTemplate" class="ui left aligned container margin-top-massive"
+                     id="authorsTemplate">
+                    <h1 style="text-align: center!important;margin-top: 15px">作家管理模块</h1>
+                    <div style="margin-top: 15px!important;">
+                        <!--添加信息填入栏-->
+                        <div class="ui dropdown">
+                            <div class="ui teal small icon button" id="authorInsertOpenButton">
+                                添加
+                                <i class="ui dropdown icon"></i>
+                            </div>
+                            <div class="center aligned menu" id="authorInsertMenu">
+                                <div class="ui center aligned header">添加信息</div>
+                                <div class="divider"></div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        笔名
+                                    </div>
+                                    <input type="text" placeholder="笔名不得超过36个字符...">
+                                </div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        手机号码
+                                    </div>
+                                    <input type="text" placeholder="输入手机号...">
+                                </div>
+                                <div class="ui right labeled input">
+                                    <div class="ui basic label">
+                                        社交账号
+                                    </div>
+                                    <input type="text" placeholder="输入任意社交账号...">
+                                    <div class="ui basic label">
+                                        选填
+                                    </div>
+                                </div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        邮箱
+                                    </div>
+                                    <input type="text" placeholder="输入邮箱...">
+                                </div>
+                                <div class="ui right labeled input">
+                                    <div class="ui basic label">
+                                        作品取向
+                                    </div>
+                                    <input type="text" placeholder="输入男频或女频...">
+                                    <div class="ui basic label">
+                                        选填
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="ui teal fluid button" id="authorInsertButton">提交</div>
+                                </div>
+                                <div class="ui center aligned fluid container"
+                                     th:each="authorinserterror : ${authorInsertErrors}"
+                                     style="color: rgb(255, 27, 45);font-weight: 700">
+                                    <div class="divider"></div>
+                                    <span th:text="${authorinserterror}">123</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui small red button" id="authorsDeleteButton"><i class="x icon"></i>删除选中元素
+                        </button>
+                        &emsp;
+                        <span th:if="${insertAuthorSuccess}"
+                              style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">插入成功</span>
+                        <span th:if="${insertAuthorFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">插入失败</span>
+                        <span th:if="${editAuthorSuccess}"
+                              style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">修改成功</span>
+                        <span th:if="${editAuthorFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">修改失败</span>
+                        <!--搜索框（加入loading的class可以显示搜索时的加载特效）-->
+                        <div class="ui search" style="float: right">
+                            <div class="ui icon input" style="width: 630px;">
+                                <input class="prompt" type="text" placeholder="复合查询的内容用'&'进行拼接,且字段顺序必须和表名顺序一致！"
+                                       id="authorsSearch" name="authorsSearch">
+                            </div>
+                            <div class="results"></div>
+                            <button class="ui purple button" id="authorsSearchButton"><i class="search icon"></i>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div th:fragment="authorsTable" id="authorsTable">
+                        <table class="ui compact celled definition center aligned table"
+                               style="margin-top: 20px!important;">
+                            <thead class="full-width">
+                            <tr>
+                                <th></th>
+                                <th>笔名</th>
+                                <th>手机号码</th>
+                                <th>社交账号</th>
+                                <th>邮箱</th>
+                                <th>写作总体性取向</th>
+                                <th>作家注册时间</th>
+                                <th>简单操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="author : ${allAuthors.list}">
+                                <td class="collapsing">
+                                    <div class="ui fitted slider checkbox">
+                                        <input type="checkbox" name="authorSelected"> <label></label>
+                                    </div>
+                                </td>
+                                <td th:text="${author.penName}">河马</td>
+                                <td th:text="${author.telPhone}">123456789</td>
+                                <td th:text="${author.chatAccount}">123456789</td>
+                                <td th:text="${author.email}">jhlilk22@yahoo.com</td>
+                                <td th:text="${author.workDirection == null ? '无' : (author.workDirection == 0 ? '男频' : '女频')}">
+                                    男频
+                                </td>
+                                <td th:text="${#dates.format(author.createTime, 'yyyy-MM-dd HH:mm:ss')}">2013年9月14日</td>
+                                <td>
+                                    <input type="hidden" th:value="${author.id}">
+                                    <div class="ui right pointing dropdown">
+                                        <button class="ui small teal icon button authorEditOpenButton">
+                                            编辑
+                                            <i class="edit icon"></i>
+                                        </button>
+                                        <div class="center aligned menu authorEditMenu">
+                                            <div class="ui center aligned header">修改信息</div>
+                                            <div class="divider"></div>
+                                            <div class="ui left labeled disabled input">
+                                                <div class="ui basic label">
+                                                    ID
+                                                </div>
+                                                <input type="text" placeholder="id..." th:value="${author.id}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    笔名
+                                                </div>
+                                                <input type="text" placeholder="笔名不得超过36个字符..."
+                                                       th:value="${author.penName}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    手机号码
+                                                </div>
+                                                <input type="text" placeholder="输入手机号..." th:value="${author.telPhone}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    社交账号
+                                                </div>
+                                                <input type="text" placeholder="输入任意社交账号..."
+                                                       th:value="${author.chatAccount}">
+                                                <div class="ui basic label">
+                                                    选填
+                                                </div>
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    邮箱
+                                                </div>
+                                                <input type="text" placeholder="输入邮箱..." th:value="${author.email}">
+                                            </div>
+                                            <div class="ui right labeled input">
+                                                <div class="ui basic label">
+                                                    作品取向
+                                                </div>
+                                                <input type="text" placeholder="输入男频或女频,默认女..."
+                                                       th:value="${author.workDirection == null ? '无' : (author.workDirection == 0 ? '男频' : '女频')}">
+                                                <div class="ui basic label">
+                                                    选填
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="ui teal fluid button">提交</div>
+                                            </div>
+                                            <div class="ui center aligned fluid container"
+                                                 th:each="authorediterror : ${authorEditErrors}"
+                                                 style="color: rgb(255, 27, 45);font-weight: 700">
+                                                <span th:text="${authorediterror}">123</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui small red button authorDeleteButton"><i
+                                            class="trash alternate icon"></i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="full-width left aligned">
+                            <tr>
+                                <th></th>
+                                <th colspan="7">
+                                    <div class="ui medium disabled button margin-top-small" id="authorRemoveAll">
+                                        Remove All
+                                    </div>
+                                    <div class="ui medium button margin-top-small" id="authorApproveAll">
+                                        Approve All
+                                    </div>
+                                    <div class="ui right floated pagination menu" style="float: right"
+                                         th:if="${allAuthors.pages} > 1" id="pageColumn">
+                                        <!--上一页-->
+                                        <a id="preAuthorsPage" class="icon item" th:unless="${allAuthors.isFirstPage}">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                        <a class="active item" th:if="${allAuthors.pageNum} <= ${allAuthors.pages}"
+                                           th:text="${allAuthors.pageNum}"></a>
+                                        <!--下一页-->
+                                        <a id="nextAuthorsPage" class="icon item" th:unless="${allAuthors.isLastPage}">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <!--存放作者管理所需的后台数据-->
+                            <input type="hidden" id="AuthorPageNum" th:value="${allAuthors.pageNum}">
+                            <input type="hidden" id="AuthorPageSize" th:value="${allAuthors.pageSize}">
+                            <input type="hidden" id="AuthorPages" th:value="${allAuthors.pages}">
+                        </table>
+                        <div>
+                            <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                显示第&nbsp;<span th:text="${allAuthors.startRow}">1</span>&nbsp;到第&nbsp;<span
+                                    th:text="${allAuthors.endRow}">3</span>&nbsp;条记录，单页条目数为&nbsp;<span
+                                    th:text="${allAuthors.pageSize}">3</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                    th:text="${allAuthors.total}"></span>&nbsp;条
+                            </div>
+                            <div class="ui mini action input" style="float: right">
+                                <input type="text" placeholder="跳转到...页" id="authorSkip">
+                                <button class="ui icon button" id="authorSkipButton">
+                                    <i class="arrow alternate circle right icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--小说管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box6">
+                <div class="ui container">
+                    <h1 style="margin: 15px 0!important;">小说管理模块</h1>
+                    <div class="left aligned">
+                        <div class="ui buttons" style="margin-bottom: 15px;">
+                            <button class="ui violet button" id="bookSearchTemplateButton">小说搜索</button>
+                            <div class="or"></div>
+                            <button class="ui pink button" id="bookOperationTemplateButton">增加小说</button>
+                        </div>
+                    </div>
+                    <!--小说搜索模块-->
+                    <div id="bookSearchTemplate">
+                        <div class="ui search">
+                            <div class="ui icon fluid input">
+                                <input class="prompt" type="text" id="bookSearchKey" placeholder="点击搜索按钮可以重置搜索！">
+                                <button class="ui orange button" style="margin-left: 5px" id="bookSearchButton"><i
+                                        class="search icon"></i>搜索
+                                </button>
+                            </div>
+                        </div>
+                        <!--Filter-->
+                        <div class="ui left aligned segment" id="bookSearchFilter">
+                            <div class="ui large middle aligned relaxed divided list">
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="ui secondary menu" id="searchFilter1">
+                                            <span style="line-height: 40px">工作方向：</span>
+                                            <a class="item">
+                                                <span>男频</span>
+                                            </a>
+                                            <a class="item">
+                                                <span>女频</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ui fitted divider"></div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="ui secondary menu" id="searchFilter2">
+                                                <span style="line-height: 40px">作品类型：</span>
+                                                <a class="item" th:each="type : ${allTypes.list}">
+                                                    <span th:text="${type.typeName}">武侠</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui fitted divider"></div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="ui secondary menu" id="searchFilter3">
+                                                <span style="line-height: 40px">评分：</span>
+                                                <a class="item">
+                                                    <span>0~3</span>
+                                                    <input type="hidden" value="0">
+                                                    <input type="hidden" value="3">
+                                                </a>
+                                                <a class="item">
+                                                    <span>4~6</span>
+                                                    <input type="hidden" value="4">
+                                                    <input type="hidden" value="6">
+                                                </a>
+                                                <a class="item">
+                                                    <span>7~10</span>
+                                                    <input type="hidden" value="7">
+                                                    <input type="hidden" value="10">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui fitted divider"></div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="ui secondary menu" id="searchFilter4">
+                                                <span style="line-height: 40px">是否收费：</span>
+                                                <a class="item">
+                                                    <span>是</span>
+                                                </a>
+                                                <a class="item">
+                                                    <span>否</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--bookSearchedContents-->
+                        <div id="bookSearchedContents" th:fragment="bookSearchedContents">
+                            <div class="ui left aligned attached segment" th:each="book : ${allBooks.list}">
+                                <div class="ui grid">
+                                    <div class="three wide column">
+                                        <img alt="" class="ui middle aligned small image"
+                                             th:src="@{${book.picUrl}}">
+                                    </div>
+                                    <div class="thirteen wide column">
+                                        <h2 style="height: 33px;width: 802px;overflow: hidden;"><a style="color: black" target="_blank" th:text="${book.bookName}" th:href="@{/catalogue/catalogForward/{book.id}(book.id = ${book.id})}">魔法禁书目录</a><span>&emsp;<a
+                                                class="ui tiny teal tag label">标签</a></span></h2>
+                                        <p th:text="${book.bookDesc}" style="height: 126px;width: 802px;font-size: 18px"
+                                           class="pSet margin-top-small">
+                                            1
+                                        </p>
+                                        <div style="font-size: 13px;height: 22px;width: 802px;overflow: hidden;"
+                                             class="margin-top-normal">
+                                            创建时间：<span
+                                                th:text="${#dates.format(book.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>&emsp;&emsp;更新时间：<span
+                                                th:text="${#dates.format(book.lastIndexUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>&emsp;&emsp;作者：<span
+                                                th:text="${book.authorName}"></span>&emsp;&emsp;评分：<span
+                                                th:text="${book.score}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui container margin-top-normal">
+                                <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                    单页条目上限为&nbsp;<span
+                                        th:text="${allBooks.pageSize}">5</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                        th:text="${allBooks.total}">1000</span>&nbsp;条
+                                </div>
+                                <!--小说页码栏-->
+                                <div class="ui small pagination menu" style="float: right" id="bookSearchPageItem">
+                                    <a class="icon item" th:unless="${allBooks.isFirstPage}" id="preBookSearchButton">
+                                        <i class="left chevron icon"></i>
+                                    </a>
+                                    <a class="active item showPage"
+                                       th:each="num : ${#numbers.sequence((1 + allBooks.navigatePages * ((allBooks.pageNum - 1) / allBooks.navigatePages)), allBooks.navigatePages * ((allBooks.pageNum - 1) / allBooks.navigatePages + 1))}"
+                                       th:if="${num <= allBooks.pages}"
+                                       th:class="${allBooks.pageNum == num ? 'active item showPage' : 'item showPage'}"
+                                       th:text="${num}">1</a>
+                                    <a class="icon item" th:unless="${allBooks.isLastPage}" id="nextBookSearchButton">
+                                        <i class="right chevron icon"></i>
+                                    </a>
+                                </div>
+                                <!--分页信息存放处-->
+                                <input type="hidden" id="bookPageNum" th:value="${allBooks.pageNum}">
+                                <input type="hidden" id="bookPageSize" th:value="${allBooks.pageSize}">
+                                <input type="hidden" id="bookPages" th:value="${allBooks.pages}">
+                                <!--占位-->
+                                <br><br>
+                            </div>
+                        </div>
+                    </div>
+                    <!--小说增加模块-->
+                    <div id="bookOperationTemplate">
+                        <div class="ui container">
+                            <div class="ui left aligned segment">
+                                <form class="ui form" enctype="multipart/form-data" id="bookInsertForm" action="#" method="post" onsubmit="return false" th:fragment="bookInsertForm">
+                                    <input type="hidden" name="pageNum" value="1">
+                                    <input type="hidden" name="pageSize" th:value="${allBooks.pageSize}">
+                                    <div class="field">
+                                        <label>作品方向</label>
+                                        <div class="ui fluid search selection dropdown">
+                                            <input type="hidden" name="workDirection">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">作品方向(可不填)</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="0">男频</div>
+                                                <div class="item" data-value="1">女频</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>小说名</label>
+                                        <input type="text" name="bookName" placeholder="小说名限长为50个字符">
+                                    </div>
+                                    <div class="field">
+                                        <label>作者名</label>
+                                        <div class="ui fluid search selection dropdown">
+                                            <input type="hidden" name="authorName">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">作者名</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="Male" th:each="author : ${allAuthors.list}" th:text="${author.penName}" th:attr="data-value=${author.penName}">Male</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>分类名</label>
+                                        <div class="ui fluid search selection dropdown">
+                                            <input type="hidden" name="typeName">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">分类名</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="Male" th:each="type : ${allTypes.list}" th:text="${type.typeName}" th:attr="data-value=${type.typeName}">Male</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>小说描述</label>
+                                        <textarea rows="3" cols="30" placeholder="小说描述限长为2000个字符" name="bookDesc"></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label>小说封面</label>
+                                        <br>
+                                        <img class="ui medium image picUrlView" alt="#" style="display: inline;" src="https://seopic.699pic.com/photo/40018/8375.jpg_wh1200.jpg"> &nbsp;
+                                        <img class="ui small image picUrlView" alt="#" style="display: inline;" src="https://seopic.699pic.com/photo/40018/8375.jpg_wh1200.jpg"> &nbsp;
+                                        <img class="ui tiny image picUrlView" alt="#" style="display: inline;" src="https://seopic.699pic.com/photo/40018/8375.jpg_wh1200.jpg">
+                                        <br><br>
+                                        <input type="file" accept="image/png, image/jpeg, image/gif, image/jpg" name="picUrlFile" id="bookPicUrl">
+                                    </div>
+                                    <div class="inline fields">
+                                        <label>是否收费</label>
+                                        <div class="field">
+                                            <div class="ui radio">
+                                                <input type="radio" name="isRecommend" class="hidden">
+                                                <label>是</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio">
+                                                <input type="radio" name="isRecommend" class="hidden">
+                                                <label>否</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="inline fields">
+                                        <label>是否置顶该小说</label>
+                                        <div class="field">
+                                            <div class="ui radio">
+                                                <input type="radio" name="isVip" class="hidden">
+                                                <label>是</label>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui radio">
+                                                <input type="radio" name="isVip" class="hidden">
+                                                <label>否</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input class="ui button" type="button" value="提交" id="bookInsertButton">
+                                    &emsp;
+                                    <input class="ui button" type="reset" value="重置">
+                                    <br>
+                                    <div class="text" style="color: red" th:each="bookInsertError : ${bookInsertErrors}" th:text="${bookInsertError}">123</div>
+                                </form>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--小说类型管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box7">
+                <div th:fragment="typesTemplate" class="ui left aligned container margin-top-massive"
+                     id="typesTemplate">
+                    <h1 style="text-align: center!important;margin-top: 15px">小说类型管理模块</h1>
+                    <div style="margin-top: 15px!important;">
+                        <!--添加信息填入栏-->
+                        <div class="ui dropdown">
+                            <div class="ui teal small icon button" id="typeInsertOpenButton">
+                                添加
+                                <i class="ui dropdown icon"></i>
+                            </div>
+                            <div class="center aligned menu" id="typeInsertMenu">
+                                <div class="ui center aligned header">添加信息</div>
+                                <div class="divider"></div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        类型名
+                                    </div>
+                                    <input type="text" placeholder="类型名不得超过36个字符...">
+                                </div>
+                                <div class="item">
+                                    <div class="ui teal fluid button" id="typeInsertButton">提交</div>
+                                </div>
+                                <div class="ui center aligned fluid container"
+                                     th:each="typeinserterror : ${typeInsertErrors}"
+                                     style="color: rgb(255, 27, 45);font-weight: 700">
+                                    <div class="divider"></div>
+                                    <span th:text="${typeinserterror}">123</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui small red button" id="typesDeleteButton"><i class="x icon"></i>删除选中元素</button>
+                        &emsp;
+                        <span th:if="${insertTypeSuccess}"
+                              style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">插入成功</span>
+                        <span th:if="${insertTypeFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">插入失败</span>
+                        <span th:if="${editTypeSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">修改成功</span>
+                        <span th:if="${editTypeFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">修改失败</span>
+                        <!--搜索框（加入loading的class可以显示搜索时的加载特效）-->
+                        <div class="ui search" style="float: right">
+                            <div class="ui icon input" style="width: 630px;">
+                                <input class="prompt" type="text" placeholder="请输入类型名或某些类型名的前缀进行搜索！" id="typesSearch"
+                                       name="typesSearch">
+                            </div>
+                            <div class="results"></div>
+                            <button class="ui purple button" id="typesSearchButton"><i class="search icon"></i>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div th:fragment="typesTable" id="typesTable">
+                        <table class="ui compact celled definition center aligned table"
+                               style="margin-top: 20px!important;">
+                            <thead class="full-width">
+                            <tr>
+                                <th></th>
+                                <th>类型名</th>
+                                <th>类型注册时间</th>
+                                <th>简单操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="type : ${allTypes.list}">
+                                <td class="collapsing">
+                                    <div class="ui fitted slider checkbox">
+                                        <input type="checkbox" name="typeSelected"> <label></label>
+                                    </div>
+                                </td>
+                                <td th:text="${type.typeName}">河马</td>
+                                <td th:text="${#dates.format(type.createTime, 'yyyy-MM-dd HH:mm:ss')}">2013年9月14日</td>
+                                <td>
+                                    <input type="hidden" th:value="${type.id}">
+                                    <div class="ui right pointing dropdown">
+                                        <button class="ui small teal icon button typeEditOpenButton">
+                                            编辑
+                                            <i class="edit icon"></i>
+                                        </button>
+                                        <div class="center aligned menu typeEditMenu">
+                                            <div class="ui center aligned header">修改信息</div>
+                                            <div class="divider"></div>
+                                            <div class="ui left labeled disabled input">
+                                                <div class="ui basic label">
+                                                    ID
+                                                </div>
+                                                <input type="text" placeholder="id..." th:value="${type.id}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    类型名
+                                                </div>
+                                                <input type="text" placeholder="类型名不得超过36个字符..."
+                                                       th:value="${type.typeName}">
+                                            </div>
+                                            <div class="item">
+                                                <div class="ui teal fluid button">提交</div>
+                                            </div>
+                                            <div class="ui center aligned fluid container"
+                                                 th:each="typeediterror : ${typeEditErrors}"
+                                                 style="color: rgb(255, 27, 45);font-weight: 700">
+                                                <span th:text="${typeediterror}">123</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui small red button typeDeleteButton"><i
+                                            class="trash alternate icon"></i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="full-width left aligned">
+                            <tr>
+                                <th></th>
+                                <th colspan="7">
+                                    <div class="ui medium disabled button margin-top-small" id="typeRemoveAll">
+                                        Remove All
+                                    </div>
+                                    <div class="ui medium button margin-top-small" id="typeApproveAll">
+                                        Approve All
+                                    </div>
+                                    <div class="ui right floated pagination menu" style="float: right"
+                                         th:if="${allTypes.pages} > 1" id="pageColumn">
+                                        <!--上一页-->
+                                        <a id="preTypesPage" class="icon item" th:unless="${allTypes.isFirstPage}">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                        <a class="active item" th:if="${allTypes.pageNum} <= ${allTypes.pages}"
+                                           th:text="${allTypes.pageNum}"></a>
+                                        <!--下一页-->
+                                        <a id="nextTypesPage" class="icon item" th:unless="${allTypes.isLastPage}">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <!--存放作者管理所需的后台数据-->
+                            <input type="hidden" id="TypePageNum" th:value="${allTypes.pageNum}">
+                            <input type="hidden" id="TypePageSize" th:value="${allTypes.pageSize}">
+                            <input type="hidden" id="TypePages" th:value="${allTypes.pages}">
+                        </table>
+                        <div>
+                            <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                显示第&nbsp;<span th:text="${allTypes.startRow}">1</span>&nbsp;到第&nbsp;<span
+                                    th:text="${allTypes.endRow}">3</span>&nbsp;条记录，单页条目数为&nbsp;<span
+                                    th:text="${allTypes.pageSize}">3</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                    th:text="${allTypes.total}"></span>&nbsp;条
+                            </div>
+                            <div class="ui mini action input" style="float: right">
+                                <input type="text" placeholder="跳转到...页" id="typeSkip">
+                                <button class="ui icon button" id="typeSkipButton">
+                                    <i class="arrow alternate circle right icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--小说标签管理-->
+            <div class="ui stackable padded grid container-fluid box" style="background-color: rgb(243, 243, 244);"
+                 id="box8">
+                <div th:fragment="tagsTemplate" class="ui left aligned container margin-top-massive" id="tagsTemplate">
+                    <h1 style="text-align: center!important;margin-top: 15px">小说标签管理模块</h1>
+                    <div style="margin-top: 15px!important;">
+                        <!--添加信息填入栏-->
+                        <div class="ui dropdown">
+                            <div class="ui teal small icon button" id="tagInsertOpenButton">
+                                添加
+                                <i class="ui dropdown icon"></i>
+                            </div>
+                            <div class="center aligned menu" id="tagInsertMenu">
+                                <div class="ui center aligned header">添加信息</div>
+                                <div class="divider"></div>
+                                <div class="ui left labeled input">
+                                    <div class="ui basic label">
+                                        标签名
+                                    </div>
+                                    <input type="text" placeholder="标签名不得超过36个字符...">
+                                </div>
+                                <div class="item">
+                                    <div class="ui teal fluid button" id="tagInsertButton">提交</div>
+                                </div>
+                                <div class="ui center aligned fluid container"
+                                     th:each="taginserterror : ${tagInsertErrors}"
+                                     style="color: rgb(255, 27, 45);font-weight: 700">
+                                    <div class="divider"></div>
+                                    <span th:text="${taginserterror}">123</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui small red button" id="tagsDeleteButton"><i class="x icon"></i>删除选中元素</button>
+                        &emsp;
+                        <span th:if="${insertTagSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">插入成功</span>
+                        <span th:if="${insertTagFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">插入失败</span>
+                        <span th:if="${editTagSuccess}" style="color: rgb(115, 182, 129);font-weight: 700" th:class="delayHidden">修改成功</span>
+                        <span th:if="${editTagFault}" style="color: rgb(255, 27, 45);font-weight: 700" th:class="delayHidden">修改失败</span>
+                        <!--搜索框（加入loading的class可以显示搜索时的加载特效）-->
+                        <div class="ui search" style="float: right">
+                            <div class="ui icon input" style="width: 630px;">
+                                <input class="prompt" type="text" placeholder="请输入标签名或某些标签名的前缀进行搜索！" id="tagsSearch"
+                                       name="tagsSearch">
+                            </div>
+                            <div class="results"></div>
+                            <button class="ui purple button" id="tagsSearchButton"><i class="search icon"></i>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div th:fragment="tagsTable" id="tagsTable">
+                        <table class="ui compact celled definition center aligned table"
+                               style="margin-top: 20px!important;">
+                            <thead class="full-width">
+                            <tr>
+                                <th></th>
+                                <th>标签名</th>
+                                <th>标签注册时间</th>
+                                <th>简单操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="tag : ${allTags.list}">
+                                <td class="collapsing">
+                                    <div class="ui fitted slider checkbox">
+                                        <input type="checkbox" name="tagSelected"> <label></label>
+                                    </div>
+                                </td>
+                                <td th:text="${tag.tagName}">河马</td>
+                                <td th:text="${#dates.format(tag.createTime, 'yyyy-MM-dd HH:mm:ss')}">2013年9月14日</td>
+                                <td>
+                                    <input type="hidden" th:value="${tag.id}">
+                                    <div class="ui right pointing dropdown">
+                                        <button class="ui small teal icon button tagEditOpenButton">
+                                            编辑
+                                            <i class="edit icon"></i>
+                                        </button>
+                                        <div class="center aligned menu tagEditMenu">
+                                            <div class="ui center aligned header">修改信息</div>
+                                            <div class="divider"></div>
+                                            <div class="ui left labeled disabled input">
+                                                <div class="ui basic label">
+                                                    ID
+                                                </div>
+                                                <input type="text" placeholder="id..." th:value="${tag.id}">
+                                            </div>
+                                            <div class="ui left labeled input">
+                                                <div class="ui basic label">
+                                                    标签名
+                                                </div>
+                                                <input type="text" placeholder="笔名不得超过36个字符..."
+                                                       th:value="${tag.tagName}">
+                                            </div>
+                                            <div class="item">
+                                                <div class="ui teal fluid button">提交</div>
+                                            </div>
+                                            <div class="ui center aligned fluid container"
+                                                 th:each="tagediterror : ${tagEditErrors}"
+                                                 style="color: rgb(255, 27, 45);font-weight: 700">
+                                                <span th:text="${tagediterror}">123</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui small red button tagDeleteButton"><i
+                                            class="trash alternate icon"></i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot class="full-width left aligned">
+                            <tr>
+                                <th></th>
+                                <th colspan="7">
+                                    <div class="ui medium disabled button margin-top-small" id="tagRemoveAll">
+                                        Remove All
+                                    </div>
+                                    <div class="ui medium button margin-top-small" id="tagApproveAll">
+                                        Approve All
+                                    </div>
+                                    <div class="ui right floated pagination menu" style="float: right"
+                                         th:if="${allTags.pages} > 1" id="pageColumn">
+                                        <!--上一页-->
+                                        <a id="preTagsPage" class="icon item" th:unless="${allTags.isFirstPage}">
+                                            <i class="left chevron icon"></i>
+                                        </a>
+                                        <a class="active item" th:if="${allTags.pageNum} <= ${allTags.pages}"
+                                           th:text="${allTags.pageNum}"></a>
+                                        <!--下一页-->
+                                        <a id="nextTagsPage" class="icon item" th:unless="${allTags.isLastPage}">
+                                            <i class="right chevron icon"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tfoot>
+                            <!--存放作者管理所需的后台数据-->
+                            <input type="hidden" id="TagPageNum" th:value="${allTags.pageNum}">
+                            <input type="hidden" id="TagPageSize" th:value="${allTags.pageSize}">
+                            <input type="hidden" id="TagPages" th:value="${allTags.pages}">
+                        </table>
+                        <div>
+                            <div class="left aligned" style="float: left;margin-top: 4px;font-size: 14px">
+                                显示第&nbsp;<span th:text="${allTags.startRow}">1</span>&nbsp;到第&nbsp;<span
+                                    th:text="${allTags.endRow}">3</span>&nbsp;条记录，单页条目数为&nbsp;<span
+                                    th:text="${allTags.pageSize}">3</span>&nbsp;条，查出的总记录数为&nbsp;<span
+                                    th:text="${allTags.total}"></span>&nbsp;条
+                            </div>
+                            <div class="ui mini action input" style="float: right">
+                                <input type="text" placeholder="跳转到...页" id="tagSkip">
+                                <button class="ui icon button" id="tagSkipButton">
+                                    <i class="arrow alternate circle right icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--存放图表所需的后台数据-->
+            <input type="hidden" id="showYears" value="${showYears}" th:value="${showYears}">
+            <input type="hidden" id="series" value="${series}" th:value="${series}">
+        </div>
+    </div>
+</div>
+
+
+<script src="../static/js/u-charts.js" th:src="@{/js/u-charts.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script language="JavaScript">
+    $(document).ready(function () {
+        //body键盘事件
+        $(document).on("keydown", "body", function () {
+            if (event.keyCode == "27") {
+                $("#authorInsertMenu").slideUp(400);
+                $("#typesInsertMenu").slideUp(400);
+                $("#tagsInsertMenu").slideUp(400);
+                $("#administratorInsertMenu").slideUp(400);
+                $("#userInsertMenu").slideUp(400);
+                $("#personShowMenu").slideUp(400);
+                $("#authorsTable table tbody tr td div .menu").slideUp(400);
+                $("#typesTable table tbody tr td div .menu").slideUp(400);
+                $("#tagsTable table tbody tr td div .menu").slideUp(400);
+                $("#administratorsTable table tbody tr td div .menu").slideUp(400);
+                $("#usersTable table tbody tr td div .menu").slideUp(400);
+                $(".delayHidden").fadeOut(500);
+            }
+        });
+
+        //下拉特效
+        $(document).on("click", ".ui.fluid.search.selection.dropdown", function () {
+            $(this).dropdown({
+                clearable: true
+            });
+        });
+
+        $("#bookOperationTemplate").hide();
+
+        //当前登录的用户信息
+        $(document).on("click", "#personShowMenuOpenButton", function () {
+            $("#personShowMenu").slideToggle(400);
+        })
+
+        //限制字符个数
+        $(".pSet").each(function () {
+            var maxwidth = 250;
+            if ($(this).text().length > maxwidth) {
+                $(this).text($(this).text().substring(0, maxwidth));
+                $(this).html($(this).html() + "......");
+            }
+        })
+        $("textarea").each(function () {
+            var maxwidth = 2000;
+            if ($(this).text().length > maxwidth) {
+                $(this).text($(this).text().substring(0, maxwidth));
+                $(this).html($(this).html() + "");
+            }
+        })
+
+        //一些点击特效，和各个功能模块不会冲突
+        $("#boxTitle1").click(function () {
+            $("#boxTitle1").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box1").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem1").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem1").click(function () {
+            $("#lItem1").css("color", "white"),
+                $("#boxTitle1").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active")
+            $("#box1").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle2").click(function () {
+            $("#boxTitle2").addClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active")
+            $("#box2").show(),
+                $("#box1").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "white"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem2").click(function () {
+            $("#lItem2").css("color", "white"),
+                $("#boxTitle2").addClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active")
+            $("#box2").show(),
+                $("#box1").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle3").click(function () {
+            $("#boxTitle3").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box3").show(),
+                $("#box2").hide(),
+                $("#box1").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem3").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem3").click(function () {
+            $("#lItem3").css("color", "white"),
+                $("#boxTitle3").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box3").show(),
+                $("#box2").hide(),
+                $("#box1").hide(),
+                $("#box5").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle5").click(function () {
+            $("#boxTitle5").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box5").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem5").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem5").click(function () {
+            $("#lItem5").css("color", "white"),
+                $("#boxTitle5").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box5").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle6").click(function () {
+            $("#boxTitle6").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box6").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem6").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem6").click(function () {
+            $("#lItem6").css("color", "white"),
+                $("#boxTitle6").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box6").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box7").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle7").click(function () {
+            $("#boxTitle7").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box7").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box8").hide(),
+                $("#lItem7").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem7").click(function () {
+            $("#lItem7").css("color", "white"),
+                $("#boxTitle7").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle8").removeClass("active"),
+                $("#box7").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box8").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem8").css("color", "rgb(132, 144, 161)")
+        });
+        $("#boxTitle8").click(function () {
+            $("#boxTitle8").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#box8").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#lItem8").css("color", "white"),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)")
+        });
+        $("#lItem8").click(function () {
+            $("#lItem8").css("color", "white"),
+                $("#boxTitle8").addClass("active"),
+                $("#boxTitle2").removeClass("active"),
+                $("#boxTitle3").removeClass("active"),
+                $("#boxTitle5").removeClass("active"),
+                $("#boxTitle1").removeClass("active"),
+                $("#boxTitle6").removeClass("active"),
+                $("#boxTitle7").removeClass("active"),
+                $("#box8").show(),
+                $("#box2").hide(),
+                $("#box3").hide(),
+                $("#box5").hide(),
+                $("#box1").hide(),
+                $("#box6").hide(),
+                $("#box7").hide(),
+                $("#lItem2").css("color", "rgb(132, 144, 161)"),
+                $("#lItem3").css("color", "rgb(132, 144, 161)"),
+                $("#lItem5").css("color", "rgb(132, 144, 161)"),
+                $("#lItem1").css("color", "rgb(132, 144, 161)"),
+                $("#lItem6").css("color", "rgb(132, 144, 161)"),
+                $("#lItem7").css("color", "rgb(132, 144, 161)")
+        });
+
+
+        //users模块
+        //users选定条目表格设置
+        $(document).on("click", "#userApproveAll", function () {
+            $("#userApproveAll").addClass("disabled"),
+                $("#userRemoveAll").removeClass("disabled"),
+                $("#usersTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != true) {
+                        $(this).prop("checked", true);
+                    }
+                })
+        });
+        $(document).on("click", "#userRemoveAll", function () {
+            $("#userRemoveAll").addClass("disabled"),
+                $("#userApproveAll").removeClass("disabled"),
+                $("#usersTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != false) {
+                        $(this).prop("checked", false);
+                    }
+                })
+        });
+
+        //ajax解决users页码和搜索框问题
+        $(document).on("click", "#nextUsersPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextUserPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#UserPageNum").val()),
+                    "pageSize": eval($("#UserPageSize").val()),
+                    "pages": eval($("#UserPages").val()),
+                    "usersSearch": $("#usersSearch").val()
+                },
+                success: function (data) {
+                    $("#usersTable").html(data);
+                }
+            })
+        });
+        $(document).on("click", "#preUsersPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preUserPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#UserPageNum").val()),
+                    "pageSize": eval($("#UserPageSize").val()),
+                    "usersSearch": $("#usersSearch").val()
+                },
+                success: function (data) {
+                    $("#usersTable").html(data);
+                }
+            })
+        });
+        //回车触发搜索按钮
+        $(document).on("keydown", "#usersSearch", function () {
+            if (event.keyCode == "13") {
+                $("#usersSearchButton").click();
+            }
+        });
+        $(document).on("click", "#usersSearchButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/userSearch",
+                async: true,
+                data: {
+                    "pageNum": eval($("#UserPageNum").val()),
+                    "pageSize": eval($("#UserPageSize").val()),
+                    "usersSearch": $("#usersSearch").val()
+                },
+                success: function (data) {
+                    $("#usersTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#userSkip", function () {
+            if (event.keyCode == "13") {
+                $("#userSkipButton").click();
+            }
+        });
+        $(document).on("click", "#userSkipButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/skipUserPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#userSkip").val()),
+                    "pageSize": eval($("#UserPageSize").val()),
+                    "usersSearch": $("#usersSearch").val()
+                },
+                success: function (data) {
+                    $("#usersTable").html(data);
+                }
+            })
+        });
+
+        //ajax解决users增加、删除、修改问题
+        //表中每页条目数
+        var userIndex = 5;
+        for (var i = 0; i < userIndex; i++) {
+            deleteUser(i);
+            editOpenUser(i);
+            editUser(i);
+        }
+        ;
+
+        //users删除
+        function deleteUser(index) {
+            $(document).on("click", "#usersTable tbody tr:eq(" + index + ") td .userDeleteButton", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/deleteUser",
+                    async: true,
+                    data: {
+                        "id": eval($("#usersTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "pageNum": eval($("#UserPageNum").val()),
+                        "pageSize": eval($("#UserPageSize").val()),
+                        "usersSearch": $("#usersSearch").val()
+                    },
+                    success: function (data) {
+                        $("#usersTable").html(data);
+                    }
+                })
+            })
+        }
+
+        $(document).on("click", "#usersDeleteButton", function () {
+            $("#usersTable tbody tr .collapsing div input:checkbox").each(function (index) {
+                var isChecked = $(this).prop("checked");
+                if (isChecked == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "/admin/index/deleteUser",
+                        async: true,
+                        data: {
+                            "id": eval($("#usersTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                            "pageNum": eval($("#UserPageNum").val()),
+                            "pageSize": eval($("#UserPageSize").val()),
+                            "usersSearch": $("#usersSearch").val()
+                        },
+                        success: function (data) {
+                            $("#usersTable").html(data);
+                        }
+                    })
+                }
+            })
+        });
+
+        //users增加
+        $(document).on("click", "#userInsertOpenButton", function () {
+            $("#userInsertMenu").slideToggle(400);
+        })
+        $(document).on("click", "#userInsertButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/insertUser",
+                async: true,
+                data: {
+                    "userName": $("#userInsertMenu .input input:text:eq(0)").val(),
+                    "userPassword": $("#userInsertMenu .input input:text:eq(1)").val(),
+                    "telPhone": $("#userInsertMenu .input input:text:eq(2)").val(),
+                    "chatAccount": $("#userInsertMenu .input input:text:eq(3)").val(),
+                    "email": $("#userInsertMenu .input input:text:eq(4)").val(),
+                    "userType": $("#userInsertMenu .input input:text:eq(5)").val(),
+                    "pageNum": eval($("#UserPageNum").val()),
+                    "pageSize": eval($("#UserPageSize").val()),
+                    "usersSearch": $("#usersSearch").val()
+                },
+                success: function (data) {
+                    $("#usersTemplate").html(data);
+                }
+            })
+        })
+
+        //users修改
+        function editOpenUser(index) {
+            $(document).on("click", "#usersTable table tbody tr:eq(" + index + ") td div .userEditOpenButton", function () {
+                $("#usersTable table tbody tr:eq(" + index + ") td div .menu").slideToggle(400);
+            })
+        }
+
+        function editUser(index) {
+            $(document).on("click", "#usersTable table tbody tr:eq(" + index + ") td div .menu .item .button", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/updateUser",
+                    async: true,
+                    data: {
+                        "id": eval($("#usersTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "userName": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(1)").val(),
+                        "userPassword": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(2)").val(),
+                        "telPhone": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(3)").val(),
+                        "chatAccount": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(4)").val(),
+                        "email": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(5)").val(),
+                        "userType": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(6)").val() == '普通用户' ? 0 : ($("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(5)").val() == 'VIP' ? 1 : 2),
+                        "status": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(7)").val() == '正常' ? 0 : 1,
+                        "followedCount": $("#usersTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(8)").val(),
+                        "pageNum": eval($("#UserPageNum").val()),
+                        "pageSize": eval($("#UserPageSize").val()),
+                        "usersSearch": $("#usersSearch").val()
+                    },
+                    success: function (data) {
+                        $("#usersTemplate").html(data);
+                    }
+                })
+            })
+        }
+
+        //authors模块
+        //authors选定条目表格设置
+        $(document).on("click", "#authorApproveAll", function () {
+            $("#authorApproveAll").addClass("disabled"),
+                $("#authorRemoveAll").removeClass("disabled"),
+                $("#authorsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != true) {
+                        $(this).prop("checked", true);
+                    }
+                })
+        });
+        $(document).on("click", "#authorRemoveAll", function () {
+            $("#authorRemoveAll").addClass("disabled"),
+                $("#authorApproveAll").removeClass("disabled"),
+                $("#authorsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != false) {
+                        $(this).prop("checked", false);
+                    }
+                })
+        });
+
+        //ajax解决authors页码和搜索框问题
+        $(document).on("click", "#nextAuthorsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextAuthorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#AuthorPageNum").val()),
+                    "pageSize": eval($("#AuthorPageSize").val()),
+                    "pages": eval($("#AuthorPages").val()),
+                    "authorsSearch": $("#authorsSearch").val()
+                },
+                success: function (data) {
+                    $("#authorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("click", "#preAuthorsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preAuthorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#AuthorPageNum").val()),
+                    "pageSize": eval($("#AuthorPageSize").val()),
+                    "authorsSearch": $("#authorsSearch").val()
+                },
+                success: function (data) {
+                    $("#authorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#authorsSearch", function () {
+            if (event.keyCode == "13") {
+                $("#authorsSearchButton").click();
+            }
+        });
+        $(document).on("click", "#authorsSearchButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/authorSearch",
+                async: true,
+                data: {
+                    "pageNum": eval(1),
+                    "pageSize": eval($("#AuthorPageSize").val()),
+                    "authorsSearch": $("#authorsSearch").val()
+                },
+                success: function (data) {
+                    $("#authorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#authorSkip", function () {
+            if (event.keyCode == "13") {
+                $("#authorSkipButton").click();
+            }
+        });
+        $(document).on("click", "#authorSkipButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/skipAuthorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#authorSkip").val()),
+                    "pageSize": eval($("#AuthorPageSize").val()),
+                    "authorsSearch": $("#authorsSearch").val()
+                },
+                success: function (data) {
+                    $("#authorsTable").html(data);
+                }
+            })
+        });
+
+        //ajax解决authors增加、删除、修改问题
+        //表中每页条目数
+        var authorIndex = 5;
+        for (var i = 0; i < authorIndex; i++) {
+            deleteAuthor(i);
+            editOpenAuthor(i);
+            editAuthor(i);
+        }
+        ;
+
+        //authors删除
+        function deleteAuthor(index) {
+            $(document).on("click", "#authorsTable tbody tr:eq(" + index + ") td .authorDeleteButton", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/deleteAuthor",
+                    async: true,
+                    data: {
+                        "id": eval($("#authorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "pageNum": eval($("#AuthorPageNum").val()),
+                        "pageSize": eval($("#AuthorPageSize").val()),
+                        "authorsSearch": $("#authorsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#authorsTable").html(data);
+                    }
+                })
+            })
+        }
+
+        $(document).on("click", "#authorsDeleteButton", function () {
+            $("#authorsTable tbody tr .collapsing div input:checkbox").each(function (index) {
+                var isChecked = $(this).prop("checked");
+                if (isChecked == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "/admin/index/deleteAuthor",
+                        async: true,
+                        data: {
+                            "id": eval($("#authorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                            "pageNum": eval($("#AuthorPageNum").val()),
+                            "pageSize": eval($("#AuthorPageSize").val()),
+                            "authorsSearch": $("#authorsSearch").val()
+                        },
+                        success: function (data) {
+                            $("#authorsTable").html(data);
+                        }
+                    })
+                }
+            })
+        });
+
+        //authors增加
+        $(document).on("click", "#authorInsertOpenButton", function () {
+            $("#authorInsertMenu").slideToggle(400);
+        })
+        $(document).on("click", "#authorInsertButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/insertAuthor",
+                async: true,
+                data: {
+                    "penName": $("#authorInsertMenu .input input:text:eq(0)").val(),
+                    "telPhone": $("#authorInsertMenu .input input:text:eq(1)").val(),
+                    "chatAccount": $("#authorInsertMenu .input input:text:eq(2)").val(),
+                    "email": $("#authorInsertMenu .input input:text:eq(3)").val(),
+                    "workDirection": $("#authorInsertMenu .input input:text:eq(4)").val() == "" ? null : ($("#authorInsertMenu .input input:text:eq(4)") == "男频" ? 0 : 1),
+                    "pageNum": eval($("#AuthorPageNum").val()),
+                    "pageSize": eval($("#AuthorPageSize").val()),
+                    "authorsSearch": $("#authorsSearch").val()
+                },
+                success: function (data) {
+                    $("#authorsTemplate").html(data);
+                }
+            })
+        })
+
+        //authors修改
+        function editOpenAuthor(index) {
+            $(document).on("click", "#authorsTable table tbody tr:eq(" + index + ") td div .authorEditOpenButton", function () {
+                $("#authorsTable table tbody tr:eq(" + index + ") td div .menu").slideToggle(400);
+            })
+        }
+
+        function editAuthor(index) {
+            $(document).on("click", "#authorsTable table tbody tr:eq(" + index + ") td div .menu .item .button", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/updateAuthor",
+                    async: true,
+                    data: {
+                        "id": eval($("#authorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "penName": $("#authorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(1)").val(),
+                        "telPhone": $("#authorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(2)").val(),
+                        "chatAccount": $("#authorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(3)").val(),
+                        "email": $("#authorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(4)").val(),
+                        "workDirection": $("#authorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(5)").val() == "" ? null : ($("#authorsTable table tbody tr td div .menu .input input:text:eq(5) .input input:text:eq(4)") == "男频" ? 0 : 1),
+                        "pageNum": eval($("#AuthorPageNum").val()),
+                        "pageSize": eval($("#AuthorPageSize").val()),
+                        "authorsSearch": $("#authorsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#authorsTemplate").html(data);
+                    }
+                })
+            })
+        }
+
+        //types模块
+        //types选定条目表格设置
+        $(document).on("click", "#typeApproveAll", function () {
+            $("#typeApproveAll").addClass("disabled"),
+                $("#typeRemoveAll").removeClass("disabled"),
+                $("#typesTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != true) {
+                        $(this).prop("checked", true);
+                    }
+                })
+        });
+        $(document).on("click", "#typeRemoveAll", function () {
+            $("#typeRemoveAll").addClass("disabled"),
+                $("#typeApproveAll").removeClass("disabled"),
+                $("#typesTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != false) {
+                        $(this).prop("checked", false);
+                    }
+                })
+        });
+
+        //ajax解决types页码和搜索框问题
+        $(document).on("click", "#nextTypesPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextTypePage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#TypePageNum").val()),
+                    "pageSize": eval($("#TypePageSize").val()),
+                    "pages": eval($("#TypePages").val()),
+                    "typesSearch": $("#typesSearch").val()
+                },
+                success: function (data) {
+                    $("#typesTable").html(data);
+                }
+            })
+        });
+        $(document).on("click", "#preTypesPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preTypePage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#TypePageNum").val()),
+                    "pageSize": eval($("#TypePageSize").val()),
+                    "typesSearch": $("#typesSearch").val()
+                },
+                success: function (data) {
+                    $("#typesTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#typesSearch", function () {
+            if (event.keyCode == "13") {
+                $("#typesSearchButton").click();
+            }
+        });
+        $(document).on("click", "#typesSearchButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/typeSearch",
+                async: true,
+                data: {
+                    "pageNum": eval(1),
+                    "pageSize": eval($("#TypePageSize").val()),
+                    "typesSearch": $("#typesSearch").val()
+                },
+                success: function (data) {
+                    $("#typesTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#typeSkip", function () {
+            if (event.keyCode == "13") {
+                $("#typeSkipButton").click();
+            }
+        });
+        $(document).on("click", "#typeSkipButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/skipTypePage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#typeSkip").val()),
+                    "pageSize": eval($("#TypePageSize").val()),
+                    "typesSearch": $("#typesSearch").val()
+                },
+                success: function (data) {
+                    $("#typesTable").html(data);
+                }
+            })
+        });
+
+        //ajax解决types增加、删除、修改问题
+        //表中每页条目数
+        var typeIndex = 5;
+        for (var i = 0; i < typeIndex; i++) {
+            deleteType(i);
+            editOpenType(i);
+            editType(i);
+        }
+        ;
+
+        //types删除
+        function deleteType(index) {
+            $(document).on("click", "#typesTable tbody tr:eq(" + index + ") td .typeDeleteButton", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/deleteType",
+                    async: true,
+                    data: {
+                        "id": eval($("#typesTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "pageNum": eval($("#TypePageNum").val()),
+                        "pageSize": eval($("#TypePageSize").val()),
+                        "typesSearch": $("#typesSearch").val()
+                    },
+                    success: function (data) {
+                        $("#typesTable").html(data);
+                    }
+                })
+            })
+        }
+
+        $(document).on("click", "#typesDeleteButton", function () {
+            $("#typesTable tbody tr .collapsing div input:checkbox").each(function (index) {
+                var isChecked = $(this).prop("checked");
+                if (isChecked == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "/admin/index/deleteType",
+                        async: true,
+                        data: {
+                            "id": eval($("#typesTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                            "pageNum": eval($("#TypePageNum").val()),
+                            "pageSize": eval($("#TypePageSize").val()),
+                            "typesSearch": $("#typesSearch").val()
+                        },
+                        success: function (data) {
+                            $("#typesTable").html(data);
+                        }
+                    })
+                }
+            })
+        });
+
+        //types增加
+        $(document).on("click", "#typeInsertOpenButton", function () {
+            $("#typeInsertMenu").slideToggle(400);
+        })
+        $(document).on("click", "#typeInsertButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/insertType",
+                async: true,
+                data: {
+                    "typeName": $("#typeInsertMenu .input input:text:eq(0)").val(),
+                    "pageNum": eval($("#TypePageNum").val()),
+                    "pageSize": eval($("#TypePageSize").val()),
+                    "typesSearch": $("#typesSearch").val()
+                },
+                success: function (data) {
+                    $("#typesTemplate").html(data);
+                }
+            })
+        })
+
+        //types修改
+        function editOpenType(index) {
+            $(document).on("click", "#typesTable table tbody tr:eq(" + index + ") td div .typeEditOpenButton", function () {
+                $("#typesTable table tbody tr:eq(" + index + ") td div .menu").slideToggle(400);
+            })
+        }
+
+        function editType(index) {
+            $(document).on("click", "#typesTable table tbody tr:eq(" + index + ") td div .menu .item .button", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/updateType",
+                    async: true,
+                    data: {
+                        "id": eval($("#typesTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "typeName": $("#typesTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(1)").val(),
+                        "pageNum": eval($("#TypePageNum").val()),
+                        "pageSize": eval($("#TypePageSize").val()),
+                        "typesSearch": $("#typesSearch").val()
+                    },
+                    success: function (data) {
+                        $("#typesTemplate").html(data);
+                    }
+                })
+            })
+        }
+
+        //tags模块
+        //tags选定条目表格设置
+        $(document).on("click", "#tagApproveAll", function () {
+            $("#tagApproveAll").addClass("disabled"),
+                $("#tagRemoveAll").removeClass("disabled"),
+                $("#tagsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != true) {
+                        $(this).prop("checked", true);
+                    }
+                })
+        });
+        $(document).on("click", "#tagRemoveAll", function () {
+            $("#tagRemoveAll").addClass("disabled"),
+                $("#tagApproveAll").removeClass("disabled"),
+                $("#tagsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != false) {
+                        $(this).prop("checked", false);
+                    }
+                })
+        });
+
+        //ajax解决tags页码和搜索框问题
+        $(document).on("click", "#nextTagsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextTagPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#TagPageNum").val()),
+                    "pageSize": eval($("#TagPageSize").val()),
+                    "pages": eval($("#TagPages").val()),
+                    "tagsSearch": $("#tagsSearch").val()
+                },
+                success: function (data) {
+                    $("#tagsTable").html(data);
+                }
+            })
+        });
+        $(document).on("click", "#preTagsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preTagPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#TagPageNum").val()),
+                    "pageSize": eval($("#TagPageSize").val()),
+                    "tagsSearch": $("#tagsSearch").val()
+                },
+                success: function (data) {
+                    $("#tagsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#tagsSearch", function () {
+            if (event.keyCode == "13") {
+                $("#tagsSearchButton").click();
+            }
+        });
+        $(document).on("click", "#tagsSearchButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/tagSearch",
+                async: true,
+                data: {
+                    "pageNum": eval(1),
+                    "pageSize": eval($("#TagPageSize").val()),
+                    "tagsSearch": $("#tagsSearch").val()
+                },
+                success: function (data) {
+                    $("#tagsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#tagSkip", function () {
+            if (event.keyCode == "13") {
+                $("#tagSkipButton").click();
+            }
+        });
+        $(document).on("click", "#tagSkipButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/skipTagPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#tagSkip").val()),
+                    "pageSize": eval($("#TagPageSize").val()),
+                    "tagsSearch": $("#tagsSearch").val()
+                },
+                success: function (data) {
+                    $("#tagsTable").html(data);
+                }
+            })
+        });
+
+        //ajax解决tags增加、删除、修改问题
+        //表中每页条目数
+        var tagIndex = 5;
+        for (var i = 0; i < tagIndex; i++) {
+            deleteTag(i);
+            editOpenTag(i);
+            editTag(i);
+        }
+        ;
+
+        //tags删除
+        function deleteTag(index) {
+            $(document).on("click", "#tagsTable tbody tr:eq(" + index + ") td .tagDeleteButton", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/deleteTag",
+                    async: true,
+                    data: {
+                        "id": eval($("#tagsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "pageNum": eval($("#TagPageNum").val()),
+                        "pageSize": eval($("#TagPageSize").val()),
+                        "tagsSearch": $("#tagsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#tagsTable").html(data);
+                    }
+                })
+            })
+        }
+
+        $(document).on("click", "#tagsDeleteButton", function () {
+            $("#tagsTable tbody tr .collapsing div input:checkbox").each(function (index) {
+                var isChecked = $(this).prop("checked");
+                if (isChecked == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "/admin/index/deleteTag",
+                        async: true,
+                        data: {
+                            "id": eval($("#tagsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                            "pageNum": eval($("#TagPageNum").val()),
+                            "pageSize": eval($("#TagPageSize").val()),
+                            "tagsSearch": $("#tagsSearch").val()
+                        },
+                        success: function (data) {
+                            $("#tagsTable").html(data);
+                        }
+                    })
+                }
+            })
+        });
+
+        //tags增加
+        $(document).on("click", "#tagInsertOpenButton", function () {
+            $("#tagInsertMenu").slideToggle(400);
+        })
+        $(document).on("click", "#tagInsertButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/insertTag",
+                async: true,
+                data: {
+                    "tagName": $("#tagInsertMenu .input input:text:eq(0)").val(),
+                    "pageNum": eval($("#TagPageNum").val()),
+                    "pageSize": eval($("#TagPageSize").val()),
+                    "tagsSearch": $("#tagsSearch").val()
+                },
+                success: function (data) {
+                    $("#tagsTemplate").html(data);
+                }
+            })
+        })
+
+        //tags修改
+        function editOpenTag(index) {
+            $(document).on("click", "#tagsTable table tbody tr:eq(" + index + ") td div .tagEditOpenButton", function () {
+                $("#tagsTable table tbody tr:eq(" + index + ") td div .menu").slideToggle(400);
+            })
+        }
+
+        function editTag(index) {
+            $(document).on("click", "#tagsTable table tbody tr:eq(" + index + ") td div .menu .item .button", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/updateTag",
+                    async: true,
+                    data: {
+                        "id": eval($("#tagsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "tagName": $("#tagsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(1)").val(),
+                        "pageNum": eval($("#TagPageNum").val()),
+                        "pageSize": eval($("#TagPageSize").val()),
+                        "tagsSearch": $("#tagsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#tagsTemplate").html(data);
+                    }
+                })
+            })
+        }
+
+        //administrators模块
+        //administrators选定条目表格设置
+        $(document).on("click", "#administratorApproveAll", function () {
+            $("#administratorApproveAll").addClass("disabled"),
+                $("#administratorRemoveAll").removeClass("disabled"),
+                $("#administratorsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != true) {
+                        $(this).prop("checked", true);
+                    }
+                })
+        });
+        $(document).on("click", "#administratorRemoveAll", function () {
+            $("#administratorRemoveAll").addClass("disabled"),
+                $("#administratorApproveAll").removeClass("disabled"),
+                $("#administratorsTable tbody tr .collapsing div input:checkbox").each(function (index, item) {
+                    var isChecked = $(this).prop("checked");
+                    if (isChecked != false) {
+                        $(this).prop("checked", false);
+                    }
+                })
+        });
+
+        //ajax解决administrators页码和搜索框问题
+        $(document).on("click", "#nextAdministratorsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextAdministratorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#AdministratorPageNum").val()),
+                    "pageSize": eval($("#AdministratorPageSize").val()),
+                    "pages": eval($("#AdministratorPages").val()),
+                    "administratorsSearch": $("#administratorsSearch").val()
+                },
+                success: function (data) {
+                    $("#administratorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("click", "#preAdministratorsPage", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preAdministratorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#AdministratorPageNum").val()),
+                    "pageSize": eval($("#AdministratorPageSize").val()),
+                    "administratorsSearch": $("#administratorsSearch").val()
+                },
+                success: function (data) {
+                    $("#administratorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#administratorsSearch", function () {
+            if (event.keyCode == "13") {
+                $("#administratorsSearchButton").click();
+            }
+        });
+        $(document).on("click", "#administratorsSearchButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/administratorSearch",
+                async: true,
+                data: {
+                    "pageNum": eval(1),
+                    "pageSize": eval($("#AdministratorPageSize").val()),
+                    "administratorsSearch": $("#administratorsSearch").val()
+                },
+                success: function (data) {
+                    $("#administratorsTable").html(data);
+                }
+            })
+        });
+        $(document).on("keydown", "#administratorSkip", function () {
+            if (event.keyCode == "13") {
+                $("#administratorSkipButton").click();
+            }
+        });
+        $(document).on("click", "#administratorSkipButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/skipAdministratorPage",
+                async: true,
+                data: {
+                    "pageNum": eval($("#administratorSkip").val()),
+                    "pageSize": eval($("#AdministratorPageSize").val()),
+                    "administratorsSearch": $("#administratorsSearch").val()
+                },
+                success: function (data) {
+                    $("#administratorsTable").html(data);
+                }
+            })
+        });
+
+        //ajax解决administrators增加、删除、修改问题
+        //表中每页条目数
+        var administratorIndex = 5;
+        for (var i = 0; i < administratorIndex; i++) {
+            deleteAdministrator(i);
+            editOpenAdministrator(i);
+            editAdministrator(i);
+        }
+        ;
+
+        //administrators删除
+        function deleteAdministrator(index) {
+            $(document).on("click", "#administratorsTable tbody tr:eq(" + index + ") td .administratorDeleteButton", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/deleteAdministrator",
+                    async: true,
+                    data: {
+                        "id": eval($("#administratorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "pageNum": eval($("#AdministratorPageNum").val()),
+                        "pageSize": eval($("#AdministratorPageSize").val()),
+                        "administratorsSearch": $("#administratorsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#administratorsTable").html(data);
+                    }
+                })
+            })
+        }
+
+        $(document).on("click", "#administratorsDeleteButton", function () {
+            $("#administratorsTable tbody tr .collapsing div input:checkbox").each(function (index) {
+                var isChecked = $(this).prop("checked");
+                if (isChecked == true) {
+                    $.ajax({
+                        type: "post",
+                        url: "/admin/index/deleteAdministrator",
+                        async: true,
+                        data: {
+                            "id": eval($("#administratorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                            "pageNum": eval($("#AdministratorPageNum").val()),
+                            "pageSize": eval($("#AdministratorPageSize").val()),
+                            "administratorsSearch": $("#administratorsSearch").val()
+                        },
+                        success: function (data) {
+                            $("#administratorsTable").html(data);
+                        }
+                    })
+                }
+            })
+        });
+
+        //administrators增加
+        $(document).on("click", "#administratorInsertOpenButton", function () {
+            $("#administratorInsertMenu").slideToggle(400);
+        })
+        $(document).on("click", "#administratorInsertButton", function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/index/insertAdministrator",
+                async: true,
+                data: {
+                    "adminName": $("#administratorInsertMenu .input input:text:eq(0)").val(),
+                    "adminPassword": $("#administratorInsertMenu .input input:text:eq(1)").val(),
+                    "pageNum": eval($("#AdministratorPageNum").val()),
+                    "pageSize": eval($("#AdministratorPageSize").val()),
+                    "administratorsSearch": $("#administratorsSearch").val()
+                },
+                success: function (data) {
+                    $("#administratorsTemplate").html(data);
+                }
+            })
+        })
+
+        //administrators修改
+        function editOpenAdministrator(index) {
+            $(document).on("click", "#administratorsTable table tbody tr:eq(" + index + ") td div .administratorEditOpenButton", function () {
+                $("#administratorsTable table tbody tr:eq(" + index + ") td div .menu").slideToggle(400);
+            })
+        }
+
+        function editAdministrator(index) {
+            $(document).on("click", "#administratorsTable table tbody tr:eq(" + index + ") td div .menu .item .button", function () {
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/updateAdministrator",
+                    async: true,
+                    data: {
+                        "id": eval($("#administratorsTable tbody tr:eq(" + index + ") td input:hidden").val()),
+                        "adminName": $("#administratorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(1)").val(),
+                        "adminPassword": $("#administratorsTable table tbody tr:eq(" + index + ") td div .menu .input input:text:eq(2)").val(),
+                        "pageNum": eval($("#AdministratorPageNum").val()),
+                        "pageSize": eval($("#AdministratorPageSize").val()),
+                        "administratorsSearch": $("#administratorsSearch").val()
+                    },
+                    success: function (data) {
+                        $("#administratorsTemplate").html(data);
+                    }
+                })
+            })
+        }
+
+        //books模块
+        //books子模块间互相切换
+        $("#bookSearchTemplateButton").click(function () {
+            $("#bookOperationTemplate").fadeOut(500,function () {
+                $("#bookSearchTemplate").fadeToggle();
+            });
+        })
+        $("#bookOperationTemplateButton").click(function () {
+            $("#bookSearchTemplate").fadeOut(500, function () {
+                $("#bookOperationTemplate").fadeToggle();
+            });
+        })
+
+        //books搜索展示模块
+        //搜索Filter
+        //点击处理
+        $("#searchFilter1 a").each(function (index) {
+            $("#searchFilter1 a:eq(" + index + ")").click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                } else {
+                    $(this).addClass("active");
+                    $("#searchFilter1 a").not($(this)).removeClass("active");
+                }
+            })
+        })
+        $("#searchFilter2 a").each(function (index) {
+            $("#searchFilter2 a:eq(" + index + ")").click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                } else {
+                    $(this).addClass("active");
+                    $("#searchFilter2 a").not($(this)).removeClass("active");
+                }
+            })
+        })
+        $("#searchFilter3 a").each(function (index) {
+            $("#searchFilter3 a:eq(" + index + ")").click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                } else {
+                    $(this).addClass("active");
+                    $("#searchFilter3 a").not($(this)).removeClass("active");
+                }
+            })
+        })
+        $("#searchFilter4 a").each(function (index) {
+            $("#searchFilter4 a:eq(" + index + ")").click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                } else {
+                    $(this).addClass("active");
+                    $("#searchFilter4 a").not($(this)).removeClass("active");
+                }
+            })
+        })
+
+        //搜索
+        //回车触发搜索按钮
+        $(document).on("keydown", "#bookSearchKey", function(){
+            if(event.keyCode == "13"){
+                $("#bookSearchButton").click();
+            }
+        })
+        $("#bookSearchButton").click(function () {
+            let workDirectionSu = false;
+            let isVipSu = false;
+            $("#searchFilter1 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    workDirectionSu = true;
+                }
+            })
+            $("#searchFilter4 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    isVipSu = true;
+                }
+            })
+            $.ajax({
+                type: "post",
+                url: "/admin/index/bookSearch",
+                async: true,
+                data: {
+                    "workDirection": workDirectionSu == true ? ($("#searchFilter1 a.active span").text() == "男频" ? 0 : 1) : null,
+                    "typeName": $("#searchFilter2 a.active span").text(),
+                    "minScore": $("#searchFilter3 a.active input:eq(0)").val(),
+                    "maxScore": $("#searchFilter3 a.active input:eq(1)").val(),
+                    "isVip": isVipSu == true ? ($("#searchFilter4 a.active span").text() == "否" ? 0 : 1) : null,
+                    "key": $("#bookSearchKey").val(),
+                    "pageNum": eval(1),
+                    "pageSize": eval($("#bookPageSize").val())
+                },
+                success: function (data) {
+                    $("#bookSearchedContents").html(data);
+                }
+            })
+        })
+
+        //搜索上一页
+        $(document).on("click", "#preBookSearchButton", function () {
+            let workDirectionSu = false;
+            let isVipSu = false;
+            $("#searchFilter1 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    workDirectionSu = true;
+                }
+            })
+            $("#searchFilter4 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    isVipSu = true;
+                }
+            })
+            $.ajax({
+                type: "post",
+                url: "/admin/index/preBookSearchPage",
+                async: true,
+                data: {
+                    "workDirection": workDirectionSu == true ? ($("#searchFilter1 a.active span").text() == "男频" ? 0 : 1) : null,
+                    "typeName": $("#searchFilter2 a.active span").text(),
+                    "minScore": $("#searchFilter3 a.active input:eq(0)").val(),
+                    "maxScore": $("#searchFilter3 a.active input:eq(1)").val(),
+                    "isVip": isVipSu == true ? ($("#searchFilter4 a.active span").text() == "否" ? 0 : 1) : null,
+                    "key": $("#bookSearchKey").val(),
+                    "pageNum": eval($("#bookPageNum").val()),
+                    "pageSize": eval($("#bookPageSize").val()),
+                    "pages": eval($("#bookPages").val())
+                },
+                success: function (data) {
+                    $("#bookSearchedContents").html(data);
+                }
+            })
+        })
+
+        //搜索下一页
+        $(document).on("click", "#nextBookSearchButton", function () {
+            let workDirectionSu = false;
+            let isVipSu = false;
+            $("#searchFilter1 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    workDirectionSu = true;
+                }
+            })
+            $("#searchFilter4 a").each(function () {
+                if ($(this).hasClass("active")) {
+                    isVipSu = true;
+                }
+            })
+            $.ajax({
+                type: "post",
+                url: "/admin/index/nextBookSearchPage",
+                async: true,
+                data: {
+                    "workDirection": workDirectionSu == true ? ($("#searchFilter1 a.active span").text() == "男频" ? 0 : 1) : null,
+                    "typeName": $("#searchFilter2 a.active span").text(),
+                    "minScore": $("#searchFilter3 a.active input:eq(0)").val(),
+                    "maxScore": $("#searchFilter3 a.active input:eq(1)").val(),
+                    "isVip": isVipSu == true ? ($("#searchFilter4 a.active span").text() == "否" ? 0 : 1) : null,
+                    "key": $("#bookSearchKey").val(),
+                    "pageNum": eval($("#bookPageNum").val()),
+                    "pageSize": eval($("#bookPageSize").val()),
+                    "pages": eval($("#bookPages").val())
+                },
+                success: function (data) {
+                    $("#bookSearchedContents").html(data);
+                }
+            })
+        })
+
+        //跳转到某一页
+        $("#bookSearchPageItem a.showPage").each(function (index) {
+            $(document).on("click", "#bookSearchPageItem a.showPage:eq(" + index + ")", function () {
+                let workDirectionSu = false;
+                let isVipSu = false;
+                $("#searchFilter1 a").each(function () {
+                    if ($(this).hasClass("active")) {
+                        workDirectionSu = true;
+                    }
+                })
+                $("#searchFilter4 a").each(function () {
+                    if ($(this).hasClass("active")) {
+                        isVipSu = true;
+                    }
+                })
+                $.ajax({
+                    type: "post",
+                    url: "/admin/index/skipBookSearchPage",
+                    async: true,
+                    data: {
+                        "workDirection": workDirectionSu == true ? ($("#searchFilter1 a.active span").text() == "男频" ? 0 : 1) : null,
+                        "typeName": $("#searchFilter2 a.active span").text(),
+                        "minScore": $("#searchFilter3 a.active input:eq(0)").val(),
+                        "maxScore": $("#searchFilter3 a.active input:eq(1)").val(),
+                        "isVip": isVipSu == true ? ($("#searchFilter4 a.active span").text() == "否" ? 0 : 1) : null,
+                        "key": $("#bookSearchKey").val(),
+                        "pageNum": $(this).text(),
+                        "pageSize": eval($("#bookPageSize").val()),
+                        "pages": eval($("#bookPages").val())
+                    },
+                    success: function (data) {
+                        $("#bookSearchedContents").html(data);
+                    }
+                })
+            })
+        })
+
+        //books增加模块
+        //books封面上传前预览功能
+        $("#bookPicUrl").on("change", function(){
+            var objUrl = getObjectURL(this.files[0]);
+            if(objUrl){
+                $(".picUrlView").each(function (index) {
+                    $(".picUrlView:eq(" + index + ")").attr("src", objUrl);
+                })
+            }
+        })
+        function getObjectURL(file){
+            var url = null;
+            if(window.createObjectURL != undefined){
+                url = window.createObjectURL(file);
+            } else if(window.URL != undefined){
+                url = window.URL.createObjectURL(file);
+            } else if(window.webkitURL != undefined){
+                url = window.webkitURL.createObjectURL(file);
+            }
+            return url;
+        }
+        //插入请求设置
+        //使用FormData来提交上文件，jQuery1.8以上才支持
+        $(document).on("click", "#bookInsertButton", function () {
+          let formData = new FormData($("#bookInsertForm")[0]);
+          $.ajax({
+              type: "POST",
+              url: "/admin/index/insertBook",
+              data: formData,
+              processData: false, //告诉JQuery不要去处理发送的数据
+              contentType: false, //告诉JQuery不要去设置Content-Type请求头
+              success: function (data) {
+                  $("#bookInsertForm").html(data);
+              }
+          })
+        })
+    });
+
+    // 引入u-charts图表
+    var canvaLineA;
+    var chartData = {
+        "categories": eval($("#showYears").val()),
+        "series": eval($("#series").val())
+    };
+
+    function showLineA(canvasId, chartData) {
+        var ctx = document.getElementById(canvasId).getContext("2d");
+        canvaLineA = new uCharts({
+            type: 'line',
+            context: ctx,
+            fontSize: 14,
+            legend: true,
+            dataLabel: false,
+            dataPointShape: true,
+            background: '#FFFFFF',
+            pixelRatio: 1,
+            categories: chartData.categories,
+            series: chartData.series,
+            animation: true,
+            enableScroll: true,//开启图表拖拽功能
+            xAxis: {
+                type: 'grid',
+                gridColor: '#CCCCCC',
+                gridType: 'dash',
+                dashLength: 8,
+                itemCount: 4,//可不填写，配合enableScroll图表拖拽功能使用，x轴单屏显示数据的数量，默认为5个
+                scrollShow: false,//新增是否显示滚动条，默认false
+                scrollAlign: 'left',
+            },
+            yAxis: {
+                gridType: 'dash',
+                gridColor: '#CCCCCC',
+                dashLength: 8,
+                splitNumber: 5,
+                min: 0,
+                max: 15,
+                format: function (val) {
+                    return val.toFixed(0) + '元'
+                }
+            },
+            width: 790,
+            height: 370,
+            extra: {
+                line: {
+                    type: 'straight'
+                }
+            }
+        });
+    }
+
+    $('#myCanvas')[0].onmousedown = function (e) {
+        canvaLineA.scrollStart(getH5Offset(e));
+        $('#myCanvas')[0].onmousemove = function (e) {
+            canvaLineA.scroll(getH5Offset(e));
+        };
+    };
+    $('#myCanvas')[0].onmouseup = function (e) {
+        canvaLineA.scrollEnd(getH5Offset(e));
+        canvaLineA.showToolTip(getH5Offset(e), {
+            format: function (item, category) {
+                return category + ' ' + item.name + ':' + item.data
+            }
+        });
+        $('#myCanvas')[0].onmousemove = null;
+    };
+    showLineA('myCanvas', chartData);
+    //浏览器禁止缩放
+    window.addEventListener('mousewheel', function (event) {
+        if (event.ctrlKey === true || event.metaKey) {
+            event.preventDefault();
+        }
+    }, {passive: false});
+    //firefox
+    window.addEventListener('DOMMouseScroll', function (event) {
+        if (event.ctrlKey === true || event.metaKey) {
+            event.preventDefault();
+        }
+    }, {passive: false});
+</script>
+
+</body>
+</html>

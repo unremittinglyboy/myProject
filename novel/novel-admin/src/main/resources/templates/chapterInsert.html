@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scaleable=0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">小说章节增加</h2>
+            <a href="#" class="m-item item m-mobile-hidden" th:href="@{/admin/index}"><i class=" home icon"></i>管理员首页</a>
+            <a href="#" class="m-item item m-mobile-hidden"><i class=" idea icon"></i>小说主目录页</a>
+        </div>
+    </div>
+</nav>
+
+<div class="ui attached pointing menu">
+    <div class="ui container">
+        <div class="right menu">
+            <a href="#" class="teal active item">新增</a>
+        </div>
+    </div>
+</div>
+
+<!--中间内容-->
+<div class="m-container" style="padding: 2em 0;">
+    <div class="ui container">
+        <form id="blog-form" action="#" method="post" class="ui form" th:action="@{/chapter/chapterInsertMessage}">
+            <input type="hidden" name="indexId" th:value="${curBookIndex.id}">
+            <div class="required field">
+                <div class="ui left labeled input" style="z-index: 100!important;">
+                    <div class="ui selection compact teal basic dropdown label">
+                        <input type="hidden" name="flag">
+                        <i class="dropdown icon"></i>
+                        <div class="text">原创</div>
+                    </div>
+                    <input type="chapterTitle" name="chapterName" placeholder="章节标题">
+                </div>
+            </div>
+
+            <div class="required field">
+                <div id="md-content" style="z-index: 0!important;">
+                    <textarea  placeholder="博客内容" name="chapterContent"></textarea>
+                </div>
+            </div>
+
+            <div class="ui right aligned container">
+                <button type= "button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                <button type= "submit"  class="ui teal button">发布</button>
+            </div>
+            <div th:each="error : ${chapterInsertErrors}" th:text="${error}" style="color: red;font-weight: 700">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../static/js/u-charts.js" th:src="@{/js/u-charts.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script language="JavaScript">
+    $(document).ready(function () {
+
+    });
+</script>
+</body>
+</html>
